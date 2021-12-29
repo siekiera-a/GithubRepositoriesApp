@@ -4,7 +4,8 @@
 * [Installation](#installation)
   * [First solution - docker (recommended)](#first-solution---docker-recommended)
   * [Second solution - local build](#second-solution---local-build)
-* [Test application](#test-application)    
+* [Test application](#test-application)
+* [Additional task - implementation proposal](#additional-task---implementation-proposal) 
 * [Ideas for the feature improvements](#ideas-for-the-feature-improvements)
 
 ## Description
@@ -85,6 +86,13 @@ curl http://localhost:8080/repos/allegro
 
 curl http://localhost:8080/repos/allegro/stars
 ```
+
+## Additional task - implementation proposal
+
+Description: List user most popular programming languages (name and bytes count)
+
+Github provides api for that purpose ```https://api.github.com/repos/{username}/{repository}/languages``` which returns map of languages and number of bytes written in that language.
+I would extend existing functionality to return list of languages right after receiving repositories data (parallel api calls). Then group languages by name and sum bytes count. Next I would sort data descending by number of bytes.
 
 ## Ideas for the feature improvements
 * Pagination of user repositories
