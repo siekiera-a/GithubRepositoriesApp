@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GithubApiUrlService implements ApiUrlService {
 
-    @Value("${github-users-api.url}")
-    String githubUserApiUrl;
+    @Value("${github-api.url}")
+    String githubApiUrl;
 
     @Value("${github-users-api.page-size:30}")
     long githubUserApiPageSize;
@@ -31,7 +31,7 @@ public class GithubApiUrlService implements ApiUrlService {
             throw new IllegalArgumentException("Username can not be null or blank");
         }
 
-        String githubUserReposUrl = String.format("%s/%s/repos?per_page=%d", githubUserApiUrl,
+        String githubUserReposUrl = String.format("%s/users/%s/repos?per_page=%d", githubApiUrl,
             username,
             githubUserApiPageSize);
 
