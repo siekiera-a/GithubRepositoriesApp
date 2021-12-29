@@ -18,6 +18,8 @@ for any github user.
 
 ## Installation
 
+In case of choosing the first solution (docker) you can skip this step and go to Environment Variables. 
+
 Clone project using:
 
 ```git clone https://github.com/siekiera-a/GithubRepositoriesApp.git```
