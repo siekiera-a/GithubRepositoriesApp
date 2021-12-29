@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import siekiera.arkadiusz.githubrepositories.exceptions.ExternalServiceException;
 import siekiera.arkadiusz.githubrepositories.exceptions.InvalidUsernameException;
 import siekiera.arkadiusz.githubrepositories.models.Repository;
+import siekiera.arkadiusz.githubrepositories.models.UserStars;
 import siekiera.arkadiusz.githubrepositories.services.RepositoriesService;
 
 import java.time.Duration;
@@ -91,8 +92,8 @@ public class GithubRepositoriesService implements RepositoriesService {
         return tasks.stream()
             .map(CompletableFuture::join)
             .reduce(new ArrayList<>(),
-                (acc, element) -> {
-                    acc.addAll(element);
+                (acc, repositories) -> {
+                    acc.addAll(repositories);
                     return acc;
                 });
     }
@@ -124,13 +125,17 @@ public class GithubRepositoriesService implements RepositoriesService {
         }
     }
 
-    @Override
-    public List<Repository> getUserRepositories(String username) throws ExternalServiceException,
-        InvalidUsernameException {
+    private void checkIfUsernameIsValid(String username) {
         if (username == null || username.isBlank()) {
             log.info("Invalid username! " + username);
             throw new InvalidUsernameException("Invalid username: " + username);
         }
+    }
+
+    @Override
+    public List<Repository> getUserRepositories(String username) throws ExternalServiceException,
+        InvalidUsernameException {
+        checkIfUsernameIsValid(username);
 
         try {
             var start = Instant.now();
@@ -145,9 +150,37 @@ public class GithubRepositoriesService implements RepositoriesService {
             }
 
             return repositories;
-        } catch (ExternalServiceException e) {
+        } catch (Exception e) {
             log.error("Error while retrieving repositories", e);
-            throw e;
+            throw new ExternalServiceException(e);
+        }
+    }
+
+    @Override
+    public UserStars getStarsFromAllUserRepositories(String username) throws ExternalServiceException,
+        InvalidUsernameException {
+        checkIfUsernameIsValid(username);
+
+        try {
+            var start = Instant.now();
+            var repositories = getRepositories(username);
+
+            if (repositories == null) {
+                log.info(String.format("User %s not found on github!", username));
+                return null;
+            }
+
+            var durationInMillis = Duration.between(start, Instant.now()).toMillis();
+            log.info(String.format("Fetched %d %s's repositories in %d ms", repositories.size(),
+                username, durationInMillis));
+
+            var starsSum = repositories.stream()
+                .reduce(0L, (acc, repository) -> acc + repository.getStars(), Long::sum);
+
+            return new UserStars(username, starsSum);
+        } catch (Exception e) {
+            log.error("Error while retrieving repositories", e);
+            throw new ExternalServiceException(e);
         }
     }
 }

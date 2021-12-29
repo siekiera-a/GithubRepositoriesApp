@@ -3,6 +3,7 @@ package siekiera.arkadiusz.githubrepositories.services;
 import siekiera.arkadiusz.githubrepositories.exceptions.ExternalServiceException;
 import siekiera.arkadiusz.githubrepositories.exceptions.InvalidUsernameException;
 import siekiera.arkadiusz.githubrepositories.models.Repository;
+import siekiera.arkadiusz.githubrepositories.models.UserStars;
 
 import java.util.List;
 
@@ -16,5 +17,14 @@ public interface RepositoriesService {
      * @throws ExternalServiceException while unexpected error occurred during fetching repositories
      */
     List<Repository> getUserRepositories(String username) throws ExternalServiceException, InvalidUsernameException;
+
+    /***
+     * Get sum of stars from user's repositories from external service, e.g. Github
+     * @param username username
+     * @return null if user no exists, otherwise sum of stars and username
+     * @throws InvalidUsernameException while username is null or blank
+     * @throws ExternalServiceException while unexpected error occurred during fetching repositories
+     */
+    UserStars getStarsFromAllUserRepositories(String username) throws ExternalServiceException, InvalidUsernameException;
 
 }

@@ -40,7 +40,15 @@ public class RepositoryController {
 
     @GetMapping("/{user}/stars")
     public ResponseEntity<UserStars> getUserStarsInAllRepositories(@PathVariable String user) {
-        return ResponseEntity.ok(new UserStars(user, 0));
+        try {
+            var userStars = repositoriesService.getStarsFromAllUserRepositories(user);
+            return userStars == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                ResponseEntity.ok(userStars);
+        } catch (InvalidUsernameException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ExternalServiceException e) {
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
     }
 
 }
