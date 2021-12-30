@@ -91,13 +91,13 @@ curl http://localhost:8080/repos/allegro/stars
 
 ## Additional task - implementation proposal
 
-Description: List user the most popular programming languages (name and bytes count)
+Description: List the most popular user programming languages (name and bytes count)
 
 Github provides api for that purpose ```https://api.github.com/repos/{username}/{repository}/languages``` which returns map of languages and number of bytes written in that language.
-After fetching repositories, I'd take from each repository response language field and then make call to api to get number of bytes. 
-After receiving map containing languages and number of bytes I'd get entry which key matches to previously received field. 
-In this way I'd get the most popular language and bytes count from each repository. 
-All that remains is to combine elements that have the same key (language), sum up bytes and sort in proper order.
+After fetching repositories, I'd take set of the most popular languages (based on language field of repository response) 
+and take bytes count of that languages from each repository (one request per repository).
+Next I'd group data by language name and sum number of bytes.
+
 
 ## Ideas for the feature improvements
 * Pagination of user repositories
