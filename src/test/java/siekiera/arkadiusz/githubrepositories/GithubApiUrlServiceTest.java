@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import siekiera.arkadiusz.githubrepositories.services.impl.GithubApiUrlService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class GithubApiUrlServiceTest {
@@ -59,6 +60,19 @@ public class GithubApiUrlServiceTest {
             ".com/user/6154722/repos?per_page=50&page=152>; rel=\"last\", <https://api.github" +
             ".com/user/6154722/repos?per_page=50&page=1>; rel=\"first\""));
         assertEquals(152, actual);
+    }
+
+    @Test
+    void testGetRepositoryLanguagesUrl_BlankOrNullUsernameOrRepository_ThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> githubApiUrlService.getRepositoryLanguagesUrl(null,"repo"));
+        assertThrows(IllegalArgumentException.class, () -> githubApiUrlService.getRepositoryLanguagesUrl(" ","repo"));
+        assertThrows(IllegalArgumentException.class, () -> githubApiUrlService.getRepositoryLanguagesUrl("user",null));
+        assertThrows(IllegalArgumentException.class, () -> githubApiUrlService.getRepositoryLanguagesUrl("user"," "));
+    }
+
+    @Test
+    void testGetRepositoryLanguagesUrl_ValidUsernameAndRepository_ReturnsValidUrl() {
+        assertEquals("https://api.github.com/repos/allegro/bigcache/languages", githubApiUrlService.getRepositoryLanguagesUrl("allegro", "bigcache"));
     }
 
 }

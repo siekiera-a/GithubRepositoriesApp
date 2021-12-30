@@ -80,6 +80,7 @@ When the server is up you should be able to access API:
 
 * ```/repos/{username}``` - get list of user repositories (username is required)
 * ```/repos/{username}/stars``` - get stars from all user repositories (username is required)
+* ```/repos/{username}/favourite-languages``` - get the most popular user programming languages (username is required)
 
 Sample api calls (using curl):
 
@@ -87,11 +88,17 @@ Sample api calls (using curl):
 curl http://localhost:8080/repos/allegro
 
 curl http://localhost:8080/repos/allegro/stars
+
+curl http://localhost:8080/repos/allegro/favourite-languages
 ```
 
 ## Additional task - implementation proposal
 
 Description: List the most popular user programming languages (name and bytes count)
+
+### Update (30.12.2021)
+
+Implementation provided! :fire:
 
 Github provides api for that purpose ```https://api.github.com/repos/{username}/{repository}/languages``` which returns map of languages and number of bytes written in that language.
 After fetching repositories, I'd take set of the most popular languages (based on language field of repository response) 

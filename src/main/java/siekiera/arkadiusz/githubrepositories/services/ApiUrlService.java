@@ -10,4 +10,12 @@ public interface ApiUrlService {
      */
     String getUserRepositoriesUrl(String username, int page);
 
+    /***
+     * Get url to data about languages usage in repository
+     * @param username username
+     * @param repository user repository
+     * @return url to resource
+     */
+    String getRepositoryLanguagesUrl(String username, String repository);
+
 }

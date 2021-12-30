@@ -41,6 +41,19 @@ public class GithubApiUrlService implements ApiUrlService {
         return String.format("%s&page=%d", githubUserReposUrl, page);
     }
 
+    @Override
+    public String getRepositoryLanguagesUrl(String username, String repository) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username can not be null or blank");
+        }
+
+        if (repository == null || repository.isBlank()) {
+            throw new IllegalArgumentException("Repository can not be null or blank");
+        }
+
+        return String.format("%s/repos/%s/%s/languages", githubApiUrl, username, repository);
+    }
+
     /***
      * Get page count based od link header
      * @param headers response headers

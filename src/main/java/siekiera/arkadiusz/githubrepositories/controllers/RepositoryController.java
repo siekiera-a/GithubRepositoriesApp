@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import siekiera.arkadiusz.githubrepositories.exceptions.ExternalServiceException;
 import siekiera.arkadiusz.githubrepositories.exceptions.InvalidUsernameException;
+import siekiera.arkadiusz.githubrepositories.models.LanguageBytes;
 import siekiera.arkadiusz.githubrepositories.models.Repository;
 import siekiera.arkadiusz.githubrepositories.models.UserStars;
 import siekiera.arkadiusz.githubrepositories.services.RepositoriesService;
@@ -44,6 +45,19 @@ public class RepositoryController {
             var userStars = repositoriesService.getStarsFromAllUserRepositories(user);
             return userStars == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
                 ResponseEntity.ok(userStars);
+        } catch (InvalidUsernameException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ExternalServiceException e) {
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @GetMapping("/{user}/favourite-languages")
+    public ResponseEntity<List<LanguageBytes>> getMostPopularUserLanguages(@PathVariable String user) {
+        try {
+            var mostPopularLanguages = repositoriesService.getMostPopularLanguages(user);
+            return mostPopularLanguages == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                ResponseEntity.ok(mostPopularLanguages);
         } catch (InvalidUsernameException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ExternalServiceException e) {
