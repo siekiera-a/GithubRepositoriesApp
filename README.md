@@ -5,7 +5,7 @@
   * [First solution - docker (recommended)](#first-solution---docker-recommended)
   * [Second solution - local build](#second-solution---local-build)
 * [Test application](#test-application)
-* [Additional task - implementation proposal](#additional-task---implementation-proposal) 
+* [Additional task - implementation proposal (Implemented!)](#additional-task---implementation-proposal) 
 * [Ideas for the feature improvements](#ideas-for-the-feature-improvements)
 
 ## Description
@@ -13,6 +13,7 @@
 Api allows you to:
 * list user repositories (name and stars amount)
 * return sum of stars in all user repositories
+* [new] get list of the most popular user programming languages
 
 for any github user.
 
@@ -54,13 +55,13 @@ port - port on local machine
 #### Requirements
 * JDK - version 11 or above
 
-Environment variables can be also changed in *application.properties* file (before project is compiled).
+Environment variables can be also changed in *application.properties* file (before compiling).
 
-Compile project with command below (specified for your operating system):
+Compile app using command below in project directory (specified for your operating system):
 
 ```
 // windows
-mvnw.cmd clean install
+.\mvnw.cmd clean install
 
 // linux and ios (check if file have executable permissions)
 ./mvnw clean install 
