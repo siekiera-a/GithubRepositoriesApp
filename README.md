@@ -45,7 +45,7 @@ docker pull arczi31/github-repositories:latest
 
 docker run -p 8080:8080 arczi31/github-repositories:latest
 ```
-##### Template variables:
+**Template variables:**
 
 port - port on local machine
 
@@ -91,10 +91,13 @@ curl http://localhost:8080/repos/allegro/stars
 
 ## Additional task - implementation proposal
 
-Description: List user most popular programming languages (name and bytes count)
+Description: List user the most popular programming languages (name and bytes count)
 
 Github provides api for that purpose ```https://api.github.com/repos/{username}/{repository}/languages``` which returns map of languages and number of bytes written in that language.
-I would extend existing functionality to return list of languages right after receiving repositories data (parallel api calls). Then group languages by name and sum bytes count. Next I would sort data descending by number of bytes.
+After fetching repositories, I'd take from each repository response language field and then make call to api to get number of bytes. 
+After receiving map containing languages and number of bytes I'd get entry which key matches to previously received field. 
+In this way I'd get the most popular language and bytes count from each repository. 
+All that remains is to combine elements that have the same key (language), sum up bytes and sort in proper order.
 
 ## Ideas for the feature improvements
 * Pagination of user repositories
