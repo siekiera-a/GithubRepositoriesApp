@@ -22,6 +22,7 @@ public class GithubApiUrlService implements ApiUrlService {
     final Pattern pattern;
 
     public GithubApiUrlService() {
+        // when exception is thrown replace this regex with: (?<=<.*[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")
         pattern = Pattern.compile("(?<=<.{0,}[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")");
     }
 
