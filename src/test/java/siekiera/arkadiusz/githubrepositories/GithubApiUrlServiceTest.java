@@ -33,6 +33,13 @@ public class GithubApiUrlServiceTest {
     }
 
     @Test
+    void testGetPageCount_InvalidPage_Returns1() {
+        int actual = githubApiUrlService.getPageCount(prepareHeaders("<https://api.github" +
+            ".com/user/6154722/repos?page=page>; rel=\"last\""));
+        assertEquals(1, actual);
+    }
+
+    @Test
     void testGetPageCount_PageSpecifiedWithoutAdditionalParams_ReturnsValidValue() {
         int actual = githubApiUrlService.getPageCount(prepareHeaders("<https://api.github" +
             ".com/user/6154722/repos?page=9>; rel=\"prev\", <https://api.github" +

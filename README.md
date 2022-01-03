@@ -116,9 +116,12 @@ Next I'd group data by language name and sum number of bytes.
 * Api calls stats - daily api calls count with http result (how much failed, how much succeeds)
 
 ## Known issues
+
+#### Update (03.01.2022) Problem solved!
+
 [03.01.2022] In some jdk implementations (e.g. adopt openjdk 11) application failed to start. 
 It is caused by regex engine implementation (different look behind implementations across jdk versions). 
 Regex ```(?<=<.{0,}[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")``` throws exception when application is starting. 
 Temporary fix (in case when described error occurred): replace existing regex in ```src/main/java/siekiera/arkadiusz/githubrepositories/services/impl/GithubApiUrlService.java``` 
 file with ```(?<=<.*[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")```. 
-Fix will be available soon!
+Fix available!

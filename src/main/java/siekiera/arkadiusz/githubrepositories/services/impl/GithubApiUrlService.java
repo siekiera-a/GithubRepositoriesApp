@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import siekiera.arkadiusz.githubrepositories.services.ApiUrlService;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Service
@@ -19,11 +20,12 @@ public class GithubApiUrlService implements ApiUrlService {
     @Value("${github-users-api.page-size:30}")
     long githubUserApiPageSize;
 
-    final Pattern pattern;
+    final Pattern pageNumberPattern;
 
     public GithubApiUrlService() {
-        // when exception is thrown replace this regex with: (?<=<.*[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")
-        pattern = Pattern.compile("(?<=<.{0,}[&?]page=)\\d+(?=[^>]*>[^>]*rel=\"last\")");
+        // <https://api.github.com/user/6154722/repos?page=152&per_page=50>; -> 152
+        // <https://api.github.com/user/6154722/repos?per_page=50&page=30>; -> 30
+        pageNumberPattern = Pattern.compile("(?<=[?&]page=)\\d+");
     }
 
     @Override
@@ -68,13 +70,17 @@ public class GithubApiUrlService implements ApiUrlService {
         }
 
         String linkHeader = String.join("", linkHeaderList);
-        var matcher = pattern.matcher(linkHeader);
 
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group());
-        }
-
-        return 1;
+        return Arrays.stream(linkHeader.split(","))
+            .filter(link -> link.trim().toLowerCase().endsWith("rel=\"last\""))
+            .findFirst()
+            .map(linkWithLastRel -> {
+                var matcher = pageNumberPattern.matcher(linkWithLastRel);
+                if (matcher.find()) {
+                    return Integer.parseInt(matcher.group());
+                }
+                return 1;
+            }).orElse(1);
     }
 
 }
